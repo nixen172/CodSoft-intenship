@@ -1,0 +1,192 @@
+//css styles
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #333333;
+  font-family: Arial, sans-serif;
+}
+
+.calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 400px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.display {
+  background-color: #f2e8d5;
+  color: black;
+  padding: 40px;
+  text-align: right;
+  font-size: 2em;
+  border: 5px solid grey;
+  border-radius: 10px 10px 0 0;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  border: 5px solid grey;
+  width: 400px;
+  padding: 20px;
+  padding-left: 25px;
+}
+
+button {
+  background-color: #f8f8f8;
+  border: none;
+  padding: 20px;
+  font-size: 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #ddd;
+}
+
+button:active {
+  background-color: #ccc;
+}
+
+.operator {
+  background-color: #a2b9c3;
+  color: white;
+}
+
+.operator:hover {
+  background-color: #a2b9c3;
+}
+
+.equal {
+  background-color: #a2b9c3; /* Muted Gold */
+  color: #ffffff;
+  grid-column: span 2;
+}
+
+.equal:hover {
+  background-color: #a2b9c3; /* Muted Gold */
+}
+
+
+//html file
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calculator</title>
+  <link rel="stylesheet" href="styles3.css">
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display"></div>
+    <div class="buttons">
+      <button class="btn" onclick="appendNumber(7)">7</button>
+      <button class="btn" onclick="appendNumber(8)">8</button>
+      <button class="btn" onclick="appendNumber(9)">9</button>
+      <button class="btn operator" onclick="setOperation('+')">+</button>
+
+      <button class="btn" onclick="appendNumber(4)">4</button>
+      <button class="btn" onclick="appendNumber(5)">5</button>
+      <button class="btn" onclick="appendNumber(6)">6</button>
+      <button class="btn operator" onclick="setOperation('-')">-</button>
+
+      <button class="btn" onclick="appendNumber(1)">1</button>
+      <button class="btn" onclick="appendNumber(2)">2</button>
+      <button class="btn" onclick="appendNumber(3)">3</button>
+      <button class="btn operator" onclick="setOperation('*')">*</button>
+
+      <button class="btn" onclick="appendNumber(0)">0</button>
+      <button class="btn" onclick="clearDisplay()">C</button>
+      <button class="btn equal" onclick="calculateResult()">=</button>
+      <button class="btn operator" onclick="setOperation('/')">/</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+//javascript code
+
+let currentInput = '';
+let previousInput = '';
+let operator = null;
+
+const display = document.getElementById('display');
+
+// Append number to the display
+function appendNumber(number) {
+  currentInput += number;
+  display.textContent = currentInput;
+}
+
+// Set the operator (+, -, *, /)
+function setOperation(op) {
+  if (currentInput === '') return; // Do nothing if there's no number
+  if (previousInput !== '') {
+    calculateResult(); // Calculate the result if there's a previous input
+  }
+  operator = op;
+  previousInput = currentInput;
+  currentInput = '';
+}
+
+// Calculate the result
+function calculateResult() {
+  let result;
+  const prev = parseFloat(previousInput);
+  const current = parseFloat(currentInput);
+
+  if (isNaN(prev) || isNaN(current)) return;
+
+  switch (operator) {
+    case '+':
+      result = prev + current;
+      break;
+    case '-':
+      result = prev - current;
+      break;
+    case '*':
+      result = prev * current;
+      break;
+    case '/':
+      if (current === 0) {
+        result = 'Error'; // Handle division by zero
+      } else {
+        result = prev / current;
+      }
+      break;
+    default:
+      return;
+  }
+
+  currentInput = result.toString();
+  operator = null;
+  previousInput = '';
+  display.textContent = currentInput;
+}
+
+// Clear the display
+function clearDisplay() {
+  currentInput = '';
+  previousInput = '';
+  operator = null;
+  display.textContent = '';
+}
+
